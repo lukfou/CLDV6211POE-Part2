@@ -1,0 +1,76 @@
+﻿@using System
+@using System.Linq
+@model IEnumerable<CLDV6211POE.Models.Venue>
+
+@{
+    ViewData["Title"] = "Index";
+    var firstDescription = "";
+    if (Model != null)
+    {
+        var first = Model.FirstOrDefault();
+        Func<object, string, string> getProp = (obj, name) =>
+        {
+            var pi = obj?.GetType().GetProperty(name);
+            return pi != null ? (pi.GetValue(obj)?.ToString() ?? "") : "";
+        };
+        firstDescription = getProp(first, "Description");
+    }
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<p>@firstDescription</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Capacity</th>
+            <th>Description</th>
+            <th>Image URL</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model ?? Enumerable.Empty<CLDV6211POE.Models.Venue>()) {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Location
+            </td>
+            <td>
+                @item.Capacity
+            </td>
+            <td>
+                @{
+                    Func<object, string, string> getProp = (obj, name) =>
+                    {
+                        var pi = obj?.GetType().GetProperty(name);
+                        return pi != null ? (pi.GetValue(obj)?.ToString() ?? "") : "";
+                    };
+                }
+                @getProp(item, "Description")
+            </td>
+            <td>
+                @item.ImageUrl
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.VenueId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.VenueId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.VenueId">Delete</a>
+            </td>
+            <td>
+                <img src="@item.ImageUrl"
+                     width="100"
+                     alt="Venue image" />
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
